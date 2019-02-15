@@ -48,6 +48,8 @@ def MsGsp():
 
 	# L = init_pass(M, S);	
 
+
+#below function need L(list of tuple with (item,count)), MIS(dict{(item:MIS)}), n, sdc 
 def level-2():
 	for i in range(0, len(L)):
 	    #print(MIS[L[i][0]])
