@@ -59,15 +59,27 @@ def level-2():
 	            temp1 = []
 	            temp2 = []
 	            if ((L[j][1]/n) >= MIS[L[i][0]]) & (abs(L[j][1]/n - L[i][1]/n) <= sdc):
-	                temp.append(L[i][0])
-	                temp.append(L[j][0])
-	                C2.append(temp)
-	                temp1.append(L[i][0])
-	                temp2.append(L[j][0])
-	                temp = []
-	                temp.append(temp1)
-	                temp.append(temp2)
-	                C2.append(temp)
+	            	if L[i][0] < L[j][0]:
+		                temp.append(L[i][0])
+		                temp.append(L[j][0])
+		                C2.append(temp)
+		                temp1.append(L[i][0])
+		                temp2.append(L[j][0])
+		                temp = []
+		                temp.append(temp1)
+		                temp.append(temp2)
+		                C2.append(temp)
+		            else:
+		            	temp.append(L[j][0])
+		                temp.append(L[i][0])
+		                C2.append(temp)
+		                temp1.append(L[j][0])
+		                temp2.append(L[i][0])
+		                temp = []
+		                temp.append(temp1)
+		                temp.append(temp2)
+		                C2.append(temp)
+
 
 def BetweenBracket(text, a, b):
     pos_a = text.find(a)
