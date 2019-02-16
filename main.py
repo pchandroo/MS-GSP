@@ -1,40 +1,30 @@
 import operator
 from collections import OrderedDict
 
-def MsGsp():
+def readInput():
 	
-	file = open('para1-1.txt','r')
-	text = file.read().split('\n') 
-	MIS = {}
-	M = []
+	#Reading Sequence file
 	S = []
-	seqCount = 0
-	L = []
-	CountMap = {}
-	LMap = {}
 	Slines = []
-	F1 = []
-
 	with open ('data-1.txt', 'rt') as Sfile:
 	    for line in Sfile:
 	        Slines.append(line.rstrip('\n'))
-
 	lstrip = []
 	for line in Slines:
 	    lstrip.append(line[2:-2])
-
 	lbrace = []
 	for i in lstrip:
 	    lbrace.append(i.split("}{"))
-
-
 	for i in lbrace:
 	    temp = []
 	    for j in i:
 	        temp.append(j.split(', '))    
 	    S.append(temp)
 
-
+	#Reading requirements file
+	MIS = {}
+	file = open('para1-1.txt','r')
+	text = file.read().split('\n')
 	for line in text:
 		if line.find("SDC") == -1:
 			if(len(line.strip()) != 0):
@@ -43,7 +33,20 @@ def MsGsp():
 				MIS[index] = value
 		elif(len(line.strip()) != 0):
 				SDC = float(AfterEqualTo(line, '=').strip())
+	#print("S:\n", S)
+	#print("MIS\n", MIS)
+	#print("SDC\n", SDC)
 
+	return S, MIS, SDC
+
+def MsGsp(S, MIS, SDC):
+
+	M = []	
+	seqCount = 0
+	L = []
+	CountMap = {}
+	LMap = {}
+	F1 = []
 
 	for i in sorted(MIS, key=MIS.get, reverse=False) :
 		M.append(i)
@@ -63,13 +66,18 @@ def MsGsp():
 		if i not in CountMap: 
 			M.remove(i)
 
+	#print("M\n", M)
 
 	L = init_pass(M,CountMap,seqCount,MIS,LMap)
+
+	#print("L\n", L)
 
 	for i in range(len(L)):
 		support = float(L[i][1])/seqCount
 		if(support >= MIS[L[i][0]]):
 			 F1.append(L[i][0])
+
+	#print("F1\n", F1)
 
 
 def init_pass(M,CountMap,seqCount,MIS,LMap):
@@ -97,32 +105,18 @@ def init_pass(M,CountMap,seqCount,MIS,LMap):
 #below function need L(list of tuple with (item,count)), MIS(dict{(item:MIS)}), n, sdc 
 def level_2():
 	for i in range(0, len(L)):
+		C2.append([[L[i][0]], [L[i][0]]])
+		C2.append([[L[i][0], L[i][0]]])
 		if (L[i][1]/n) >= MIS[L[i][0]]:
 			for j in range(i+1, len(L)):
-				temp = []
-				temp1 = []
-				temp2 = []
 				if ((L[j][1]/n) >= MIS[L[i][0]]) & (abs(L[j][1]/n - L[i][1]/n) <= sdc):
 					if L[i][0] < L[j][0]:
-						temp.append(L[i][0])
-						temp.append(L[j][0])
-						C2.append(temp)
-						temp1.append(L[i][0])
-						temp2.append(L[j][0])
-						temp = []
-						temp.append(temp1)
-						temp.append(temp2)
-						C2.append(temp)
+						C2.append([[L[i][0], L[j][0]]])
 					else:
-						temp.append(L[j][0])
-						temp.append(L[i][0])
-						C2.append(temp)
-						temp1.append(L[j][0])
-						temp2.append(L[i][0])
-						temp = []
-						temp.append(temp1)
-						temp.append(temp2)
-						C2.append(temp)
+						C2.append([[L[j][0], L[i][0]]])
+					C2.append([[L[i][0]], [L[j][0]]])
+					C2.append([[L[j][0]], [L[i][0]]])
+	return C2
 
 
 def BetweenBracket(text, a, b):
@@ -142,4 +136,5 @@ def AfterEqualTo(text, a):
 	return text[adjusted_pos_a:]
 
 if __name__ == '__main__':
-	MsGsp()
+	S, MIS, SDC = readInput()
+	MsGsp(S, MIS, SDC)
