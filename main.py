@@ -1,6 +1,7 @@
 import copy
 import operator
 from collections import OrderedDict
+import math
 
 def readInput():
 	
@@ -18,8 +19,14 @@ def readInput():
 	    lbrace.append(i.split("}{"))
 	for i in lbrace:
 	    temp = []
+	    temp1 = []
 	    for j in i:
-	        temp.append(j.split(', '))    
+	        temp1.append(j.split(', '))
+	        for x in temp1:
+	        	x = list(map(int, x))
+	        temp.append(x)
+	        temp1 = []
+	        #print("Temp", temp)
 	    S.append(temp)
 
 	#Reading requirements file
@@ -48,10 +55,11 @@ def MsGsp(S, MIS, SDC):
 	CountMap = {}
 	LMap = {}
 	F1 = []
-	F = {}
+	F = []
 
 	for i in sorted(MIS, key=MIS.get, reverse=False) :
 		M.append(i)
+
 
 	seqCount = len(S)
 
@@ -59,7 +67,7 @@ def MsGsp(S, MIS, SDC):
 		count = 0
 		for row in S:
 			for elem in row:
-				if(elem.count(str(i))):
+				if(elem.count(i)):
 					count = count + 1
 					CountMap[i] = count
 					break
@@ -80,9 +88,94 @@ def MsGsp(S, MIS, SDC):
 			 F1.append(L[i][0])
 
 	#print("F1\n", F1)
+	
+#	F = Generation(L, MIS, seqCount, S, F1, SDC)
 
-	MScandidateGen(F,M,CountMap,SDC,MIS)
 
+
+	#print("L", L)
+	#print("MIS", MIS)
+	#print("seqCount", seqCount)
+	#print("SDC", SDC)
+	#print("S", S)
+	#print("F1", F1)
+	#print("M", M)
+
+#def Generation(L, MIS, seqCount, S, F1, SDC):
+	for f in F1:
+		F.append([[f]])
+
+	k = 2
+	
+	Ck = []
+
+	while(True):
+		print("K", k)
+		if k == 2:
+			Ck = level_2(L, MIS, seqCount, SDC)
+		else:
+			Ck = MScandidateGen(Fk, M, CountMap, SDC, MIS)
+
+		print("C", Ck)
+		print("Length of C", len(Ck))
+		SupCount = [0] * len(Ck)
+		for c in range(len(Ck)):
+			temp_count = 0
+			for s in S:
+				if Sub(Ck[c], s):
+					temp_count += 1
+			SupCount[c] = temp_count
+
+		#print("Count",SupCount)
+		Fk = []
+		for c in range(len(Ck)):
+			if SupCount[c]/seqCount >= MinMIS(Ck[c], MIS):
+				Fk.append(Ck[c])
+		#F.extend(Fk)
+		print("Fk", Fk)
+		print("Length of Fk", len(Fk))
+		k += 1
+
+		if(len(Fk) == 0):
+			break
+
+def Subset(Ck, s):
+    if len(list(set(Ck))) != len(Ck):
+        return False
+    for i in Ck:
+        if i not in s:
+            return False
+    return True
+
+def Sub(Ck, s):
+    mark = {}
+    counter = 0
+    for i in Ck:
+        isThere = False
+        j = counter
+        while j < len(s):
+            if j in mark:
+                continue
+            else:
+                if Subset(i, s[j]):
+                    mark[j] = True
+                    isThere = True
+                    counter = j+1
+                    break
+            j += 1
+        if not isThere:
+            return False
+    return True
+    
+def MinMIS(Ck, MIS):
+    minMIS = math.inf
+    #print(minMIS)
+    for i in Ck:
+        for j in i:
+            if MIS[j] < minMIS:
+                minMIS = MIS[j]
+    #print(minMIS)
+    return minMIS
 
 def init_pass(M,CountMap,seqCount,MIS,LMap):
 
@@ -107,7 +200,8 @@ def init_pass(M,CountMap,seqCount,MIS,LMap):
 
 
 #below function need L(list of tuple with (item,count)), MIS(dict{(item:MIS)}), n, sdc 
-def level_2():
+def level_2(L, MIS, n, sdc):
+	C2 = []
 	for i in range(0, len(L)):
 		C2.append([[L[i][0]], [L[i][0]]])
 		C2.append([[L[i][0], L[i][0]]])
@@ -124,13 +218,14 @@ def level_2():
 
 
 def MScandidateGen(F,M,CountMap,SDC,MIS):
-	F[2] = [[[20, 30]], [[20], [30]], [[20, 70]], [[20], [70]], [[20], [80]], [[30], [30]], [[30, 70]], [[30], [70]], [[30, 80]], [[30], [80]], [[70], [70]], [[70, 80]], [[80], [70]], [[10, 40]], [[10], [40]], [[40], [40]]]
+	#F[2] = [[[20, 30]], [[20], [30]], [[20, 70]], [[20], [70]], [[20], [80]], [[30], [30]], [[30, 70]], [[30], [70]], [[30, 80]], [[30], [80]], [[70], [70]], [[70, 80]], [[80], [70]], [[10, 40]], [[10], [40]], [[40], [40]]]
 	# F[2] = [[[20, 30, 40]], [[40], [70]]]
+	#print(F)
 	C = []
-	for i in range(len(F[2])):
-		for j in range(len(F[2])):
-			s1 = F[2][i]
-			s2 = F[2][j]
+	for i in range(len(F)):
+		for j in range(len(F)):
+			s1 = F[i]
+			s2 = F[j]
 			first_s1 = getFirstItem(s1)
 			last_s1 =  getLastItem(s1)
 			first_s2 = getFirstItem(s2)
