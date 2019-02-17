@@ -230,7 +230,7 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 			last_s1 =  getLastItem(s1)
 			first_s2 = getFirstItem(s2)
 			last_s2 =  getLastItem(s2)
-			MIS_least_seq = getMISofSequence(s1,MIS)
+			MIS_least_seq = getMISofSequence(s1,MIS,first_s1)
 			
 			if( MIS[first_s1] < MIS_least_seq ):
 				if( (removeItem(s1,1) == removeItem(s2,Length(s2)-1)) & (MIS[last_s2] > MIS[first_s1]) ):
@@ -255,7 +255,7 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 						last_c2.append(last_item_s2)
 						C.append(c2)
 
-			elif( MIS[getLastItem(s2)] <  getMISofSequence(s2,MIS) ):	
+			elif( MIS[getLastItem(s2)] <  getMISofSequence(s2,MIS,last_s2) ):	
 				if( (removeItem(s2,1) == removeItem(s1,Length(s1)-1)) & (MIS[first_s1] > MIS[last_s2]) ):
 					if(Size(FirstElement(s1)) == 1):	
 						c1 = []		
@@ -327,13 +327,15 @@ def removeItem(s,index):
 		return [element for element in seqnew if len(element) > 0]
 
 
-def getMISofSequence(s,MIS):
+def getMISofSequence(s,MIS,item):
 	temp = []
 	MIS_array = []
 	for i in s:
 		for j in range(len(i)):
 			temp.append(i[j])
 
+	temp.remove(item)		
+			
 	for elem in temp:
 		MIS_array.append(MIS[elem])
 
