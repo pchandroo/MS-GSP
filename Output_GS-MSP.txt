@@ -1,0 +1,41 @@
+The number of length 1 sequential pattern is 8
+Pattern : <{20 }>
+Pattern : <{30 }>
+Pattern : <{70 }>
+Pattern : <{80 }>
+Pattern : <{90 }>
+Pattern : <{10 }>
+Pattern : <{40 }>
+Pattern : <{50 }>
+The number of length: 2 sequential pattern is 16
+Pattern : <{20 30 }>
+Pattern : <{20 }>{30 }>
+Pattern : <{20 70 }>
+Pattern : <{20 }>{70 }>
+Pattern : <{20 }>{80 }>
+Pattern : <{30 }>{30 }>
+Pattern : <{30 70 }>
+Pattern : <{30 }>{70 }>
+Pattern : <{30 80 }>
+Pattern : <{30 }>{80 }>
+Pattern : <{70 }>{70 }>
+Pattern : <{70 80 }>
+Pattern : <{80 }>{70 }>
+Pattern : <{10 40 }>
+Pattern : <{10 }>{40 }>
+Pattern : <{40 }>{40 }>
+The number of length: 3 sequential pattern is 11
+Pattern : <{20 30 }>{30 }>
+Pattern : <{20 30 70 }>
+Pattern : <{20 30 }>{70 }>
+Pattern : <{20 30 }>{80 }>
+Pattern : <{20 }>{30 70 }>
+Pattern : <{20 }>{70 80 }>
+Pattern : <{30 }>{30 70 }>
+Pattern : <{30 70 80 }>
+Pattern : <{30 }>{70 80 }>
+Pattern : <{70 80 }>{70 }>
+Pattern : <{10 40 }>{40 }>
+The number of length: 4 sequential pattern is 2
+Pattern : <{20 30 }>{30 70 }>
+Pattern : <{20 30 }>{70 80 }>

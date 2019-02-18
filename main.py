@@ -2,13 +2,14 @@ import copy
 import operator
 from collections import OrderedDict
 import math
+from copy import deepcopy
 
 def readInput():
 	
 	#Reading Sequence file
 	S = []
 	Slines = []
-	with open ('data-1.txt', 'rt') as Sfile:
+	with open ('data.txt', 'rt') as Sfile:
 	    for line in Sfile:
 	        Slines.append(line.rstrip('\n'))
 	lstrip = []
@@ -31,7 +32,7 @@ def readInput():
 
 	#Reading requirements file
 	MIS = {}
-	file = open('para1-1.txt','r')
+	file = open('para.txt','r')
 	text = file.read().split('\n')
 	for line in text:
 		if line.find("SDC") == -1:
@@ -102,22 +103,30 @@ def MsGsp(S, MIS, SDC):
 	#print("M", M)
 
 #def Generation(L, MIS, seqCount, S, F1, SDC):
+	#for f in F1:
+	#	F.append([[f]])
+	output_file = open("Output_GS-MSP.txt", "w")
+	output_file.write("The number of length 1 sequential pattern is " +str(len(F1))+"\n")
 	for f in F1:
-		F.append([[f]])
+		print_s = "Pattern : <{" + str(f) + " }"
+		print_s += ">"
+		output_file.write(print_s+"\n")
+
+
 
 	k = 2
 	
 	Ck = []
 
 	while(True):
-		print("K", k)
+		#print("K", k)
 		if k == 2:
 			Ck = level_2(L, MIS, seqCount, SDC)
 		else:
 			Ck = MScandidateGen(Fk, M, CountMap, SDC, MIS)
 
-		print("C", Ck)
-		print("Length of C", len(Ck))
+		#print("C", Ck)
+		#print("Length of C", len(Ck))
 		SupCount = [0] * len(Ck)
 		for c in range(len(Ck)):
 			temp_count = 0
@@ -132,12 +141,31 @@ def MsGsp(S, MIS, SDC):
 			if SupCount[c]/seqCount >= MinMIS(Ck[c], MIS):
 				Fk.append(Ck[c])
 		#F.extend(Fk)
-		print("Fk", Fk)
-		print("Length of Fk", len(Fk))
-		k += 1
+		#print("Fk", Fk)
+		#print("Length of Fk", len(Fk))
+		Fk = Remove_duplicate(Fk)
 
 		if(len(Fk) == 0):
 			break
+
+		output_file.write("The number of length: "+ str(k) +" sequential pattern is " +str(len(Fk))+"\n")
+		for f in Fk:
+			print_s = "Pattern : <"
+			for s in f:
+				print_s += "{"
+				for i in s:
+					print_s += str(i) + " "
+				print_s += "}"
+				print_s += ">"
+			output_file.write(print_s+"\n")
+		k += 1
+
+def Remove_duplicate(d): 
+    final = [] 
+    for n in d: 
+        if n not in final: 
+            final.append(n) 
+    return final
 
 def Subset(Ck, s):
     if len(list(set(Ck))) != len(Ck):
@@ -148,17 +176,17 @@ def Subset(Ck, s):
     return True
 
 def Sub(Ck, s):
-    mark = {}
+    m = {}
     counter = 0
     for i in Ck:
         isThere = False
         j = counter
         while j < len(s):
-            if j in mark:
+            if j in m:
                 continue
             else:
                 if Subset(i, s[j]):
-                    mark[j] = True
+                    m[j] = True
                     isThere = True
                     counter = j+1
                     break
@@ -311,8 +339,36 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 	                    C.append(c1)
 
 
-	return C					
+	prune_c = PruneC(C,F,MIS)
+	return prune_c
 
+
+def PruneC(Can_Seq,F,M):
+    count = 0;
+    final_Can_Seq = []
+    for Can_Seq_Item in Can_Seq:
+        count = 0
+        temp_Can_Seq = deepcopy(Can_Seq_Item)
+        temp_list = []
+        for Can_Seq_Si,Can_Seq_Item_Seq in enumerate(Can_Seq_Item):
+            min_MS_Can_Seq_Item = ''
+            min_MS_Can_Seq_Item = Can_Seq_Item_Seq[0]
+            for e_item in Can_Seq_Item_Seq:
+                if(M[e_item] < M[min_MS_Can_Seq_Item]):
+                    min_MS_Can_Seq_Item = e_item
+            for Can_Seq_Ii,Can_Seq_Item_item in enumerate(Can_Seq_Item_Seq):
+                temp_Can_Seq = deepcopy(Can_Seq_Item)
+                if(temp_Can_Seq[Can_Seq_Si][Can_Seq_Ii] != min_MS_Can_Seq_Item):
+                    del temp_Can_Seq[Can_Seq_Si][Can_Seq_Ii]
+                    temp_Can_Seq = list(filter(None, temp_Can_Seq))
+                    temp_list.append(temp_Can_Seq)
+        temp = 0
+        for each_temp_list in temp_list:
+            if(not any(each_temp_list == each_items for each_items in F)):
+                temp += 1
+        if(temp == 0):
+            final_Can_Seq.append(Can_Seq_Item)
+    return final_Can_Seq
 
 def getFirstItem(s):
 	first = 0
