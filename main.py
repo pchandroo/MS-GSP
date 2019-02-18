@@ -247,7 +247,8 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 	                        c2 = s1.copy()
 	                        last_c2 = LastElement(c2).copy()
 	                        last_c2.append(getLastItem(s2))
-	                        c2 = removeItem(c2,Length(c2)-1)
+	                        # c2 = removeItem(c2,Length(c2)-1)
+	                        del(c2[-1])
 	                        c2.append(last_c2)
 	                        C.append(c2)
 	                        
@@ -257,7 +258,8 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 	                    #last_item_s2 = getLastItem(s2)
 	                    last_c2 = LastElement(c2).copy()
 	                    last_c2.append(getLastItem(s2))
-	                    c2 = removeItem(c2,Length(c2)-1)
+	                    # c2 = removeItem(c2,Length(c2)-1)
+	                    del(c2[-1])
 	                    c2.append(last_c2)
 	                    C.append(c2)
 
@@ -274,7 +276,8 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 	                        c2 = s2.copy()
 	                        last_c2 = FirstElement(c2).copy()
 	                        last_c2.append(getFirstItem(s1))
-	                        c2 = removeItem(c2,0)
+	                        # c2 = removeItem(c2,0)
+	                        del(c2[0])
 	                        c2.append(last_c2)
 	                        C.append(c2)
 	                elif( ((Length(s2) == 2 & Size(s2) == 1) & (MIS[first_s1] > MIS[first_s2])) | ( Length(s2) > 2 ) ):
@@ -283,7 +286,8 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 	                    #last_item_s1 = getFirstItem(s1)
 	                    last_c2 = FirstElement(c2).copy()
 	                    last_c2.append(getFirstItem(s1))
-	                    c2 = removeItem(c2,0)
+	                    # c2 = removeItem(c2,0)
+	                    del(c2[0])
 	                    c2.append(last_c2)
 	                    C.append(c2)
 
@@ -294,14 +298,15 @@ def MScandidateGen(F,M,CountMap,SDC,MIS):
 	                    c1 = s1.copy()
 	                    c1.append([getLastItem(s2)])
 	                    C.append(c1)
-	                    
-	                if(Size(LastElement(s2)) > 1):
+					
+	                else:
 	                    c1 = []
 	                    c1 = s1.copy()
 	                    #last_item_s2 = getLastItem(s2)
 	                    last_c1 = LastElement(c1).copy()
 	                    last_c1.append(getLastItem(s2))
-	                    c1 = removeItem(c1,Length(c1)-1)
+	                    # c1 = removeItem(c1,Length(c1)-1)
+	                    del(c1[-1])
 	                    c1.append(last_c1)
 	                    C.append(c1)
 
