@@ -3,32 +3,31 @@ import operator
 from collections import OrderedDict
 import math
 from copy import deepcopy
+import re
 
 def readInput():
 	
 	#Reading Sequence file
 	S = []
 	Slines = []
+	temp = []
+	temp_1 = []
 	with open ('data.txt', 'rt') as Sfile:
 	    for line in Sfile:
 	        Slines.append(line.rstrip('\n'))
-	lstrip = []
-	for line in Slines:
-	    lstrip.append(line[2:-2])
-	lbrace = []
-	for i in lstrip:
-	    lbrace.append(i.split("}{"))
-	for i in lbrace:
-	    temp = []
-	    temp1 = []
-	    for j in i:
-	        temp1.append(j.split(', '))
-	        for x in temp1:
-	        	x = list(map(int, x))
-	        temp.append(x)
-	        temp1 = []
-	        #print("Temp", temp)
-	    S.append(temp)
+	    for line in Slines:
+	        line = line.strip()[1:-1]
+	        
+	        for s in re.split(r'}{',line[1:-1]):
+	            for i in re.split(',| ',s):
+	                if i!='':
+	                    temp.append(int(i))
+	                        
+	                
+	            temp_1.append(temp)
+	            temp=[]
+	        S.append(temp_1)
+	        temp_1=[]
 
 	#Reading requirements file
 	MIS = {}
@@ -108,8 +107,9 @@ def MsGsp(S, MIS, SDC):
 	output_file = open("Output_GS-MSP.txt", "w")
 	output_file.write("The number of length 1 sequential pattern is " +str(len(F1))+"\n")
 	for f in F1:
-		print_s = "Pattern : <{" + str(f) + " }"
+		print_s = "Pattern : <{" + str(f) + "}"
 		print_s += ">"
+		print_s += ": Count = " + str(CountMap[f])
 		output_file.write(print_s+"\n")
 
 
@@ -137,26 +137,33 @@ def MsGsp(S, MIS, SDC):
 
 		#print("Count",SupCount)
 		Fk = []
+		Fk_withcount = []
 		for c in range(len(Ck)):
 			if SupCount[c]/seqCount >= MinMIS(Ck[c], MIS):
 				Fk.append(Ck[c])
+				Fk_withcount.append([Ck[c], SupCount[c]])
+		#print("K", k)
+		#print("Support Count", SupCount)
 		#F.extend(Fk)
 		#print("Fk", Fk)
 		#print("Length of Fk", len(Fk))
 		Fk = Remove_duplicate(Fk)
+		Fk_withcount = Remove_duplicate(Fk_withcount)
 
 		if(len(Fk) == 0):
 			break
 
 		output_file.write("The number of length: "+ str(k) +" sequential pattern is " +str(len(Fk))+"\n")
-		for f in Fk:
+		for f in Fk_withcount:
 			print_s = "Pattern : <"
-			for s in f:
+			for s in f[0]:
 				print_s += "{"
 				for i in s:
-					print_s += str(i) + " "
+					print_s += str(i) + ","
+				#print_s += ","
+				print_s = print_s[:-1]
 				print_s += "}"
-				print_s += ">"
+			print_s += ">:Count = " + str(f[1])
 			output_file.write(print_s+"\n")
 		k += 1
 
