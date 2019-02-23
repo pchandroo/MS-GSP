@@ -104,7 +104,7 @@ def MsGsp(S, MIS, SDC):
 #def Generation(L, MIS, seqCount, S, F1, SDC):
 	#for f in F1:
 	#	F.append([[f]])
-	output_file = open("Output_GS-MSP.txt", "w")
+	output_file = open("Output_MS-GSP.txt", "w")
 	output_file.write("The number of length 1 sequential pattern is " +str(len(F1))+"\n")
 	for f in F1:
 		print_s = "Pattern : <{" + str(f) + "}"
