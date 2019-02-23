@@ -10,5 +10,5 @@ Needs two input file, Data file and a parameter file
 Data file name format --> "data.txt"
 Parameter file name format --> "para.txt"
 
-The respective sequential patterns for the given input is generated in the file "Output_GS-MSP.txt"
+The respective sequential patterns for the given input is generated in the file "Output_MS-GSP.txt"
 
